@@ -2,7 +2,7 @@ package com.example.backend_mobile.enums;
 
 public enum GioiTinh {
     NAM("Nam"),
-    NU("Nữ"),
+    NỮ("Nữ"),
     KHAC("Khác");
 
     private String value;

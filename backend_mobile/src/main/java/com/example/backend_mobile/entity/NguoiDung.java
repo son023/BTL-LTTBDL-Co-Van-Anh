@@ -1,5 +1,7 @@
 package com.example.backend_mobile.entity;
 
+import com.example.backend_mobile.converter.GioiTinhConverter;
+import com.example.backend_mobile.converter.TrangThaiNguoiDungConverter;
 import com.example.backend_mobile.enums.GioiTinh;
 import com.example.backend_mobile.enums.TrangThaiNguoiDung;
 import lombok.AllArgsConstructor;
@@ -37,8 +39,8 @@ public class NguoiDung {
     @Column(name = "ngay_sinh")
     private LocalDate ngaySinh;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "gioi_tinh")
+    @Convert(converter = GioiTinhConverter.class)
     private GioiTinh gioiTinh;
 
     @Column(name = "dia_chi")
@@ -49,10 +51,8 @@ public class NguoiDung {
     @Column(name = "thoi_gian_tao")
     private LocalDateTime thoiGianTao = LocalDateTime.now();
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "trang_thai")
+    @Convert(converter = TrangThaiNguoiDungConverter.class)
     private TrangThaiNguoiDung trangThai = TrangThaiNguoiDung.HOAT_DONG;
-
-
 
 }

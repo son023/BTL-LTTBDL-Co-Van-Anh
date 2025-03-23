@@ -2,9 +2,7 @@ package com.example.backend_mobile.enums;
 
 public enum HangThanhVien {
     THUONG("Thường"),
-    BAC("Bạc"),
-    VANG("Vàng"),
-    BACH_KIM("Bạch kim");
+    BAC("VIP");
 
     private String value;
 
