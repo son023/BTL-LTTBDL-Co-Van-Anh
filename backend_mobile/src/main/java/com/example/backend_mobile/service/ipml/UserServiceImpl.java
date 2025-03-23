@@ -1,6 +1,6 @@
 package com.example.backend_mobile.service.ipml;
 
-import com.example.backend_mobile.configuration.UserDetailsImpl;
+import com.example.backend_mobile.security.service.UserDetailsImpl;
 import com.example.backend_mobile.entity.KhachHang;
 import com.example.backend_mobile.entity.NguoiDung;
 import com.example.backend_mobile.repository.NguoiDungRepository;

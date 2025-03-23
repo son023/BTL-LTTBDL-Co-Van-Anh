@@ -2,10 +2,12 @@ package com.example.backend_mobile.configuration;
 
 
 
+import com.example.backend_mobile.security.jwt.AuthEntryPointJwt;
+import com.example.backend_mobile.security.jwt.AuthTokenFilter;
+import com.example.backend_mobile.security.service.UserDetailsServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

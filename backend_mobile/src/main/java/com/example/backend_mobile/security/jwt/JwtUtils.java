@@ -1,4 +1,4 @@
-package com.example.backend_mobile.configuration;
+package com.example.backend_mobile.security.jwt;
 
 
 import java.text.ParseException;
@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.backend_mobile.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

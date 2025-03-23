@@ -1,4 +1,4 @@
-package com.example.backend_mobile.configuration;
+package com.example.backend_mobile.security.jwt;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
