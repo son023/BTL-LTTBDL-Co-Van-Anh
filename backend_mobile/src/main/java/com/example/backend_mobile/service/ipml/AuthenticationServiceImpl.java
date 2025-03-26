@@ -82,6 +82,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         user.setMaThanhVien("KH" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         user.setDiemTichLuy(0);
         user.setHangThanhVien(HangThanhVien.THUONG);
+        System.out.println("737458965");
 
         khachHangRepository.save(user);
 
