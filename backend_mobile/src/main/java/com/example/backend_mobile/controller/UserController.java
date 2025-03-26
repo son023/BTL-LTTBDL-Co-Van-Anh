@@ -1,6 +1,6 @@
 package com.example.backend_mobile.controller;
 
-import com.example.backend_mobile.service.ipml.UserServiceImpl;
+import com.example.backend_mobile.service.IUserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
 
-    UserServiceImpl userService;
+    IUserService userService;
 
     @GetMapping("/profile")
     @PreAuthorize("hasRole('USER')")
