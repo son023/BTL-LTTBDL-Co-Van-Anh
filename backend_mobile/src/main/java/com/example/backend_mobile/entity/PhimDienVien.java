@@ -24,15 +24,15 @@ public class PhimDienVien {
 
     @ManyToOne
     @JoinColumn(name = "dien_vien", nullable = false)
-    private DienVien dien_vien;
+    private DienVien dienVien;
 
     @Column(name = "vai_dien")
     @Size(max = 100)
-    private String vai_dien;
+    private String vaiDien;
 
     @Column(name = "la_chinh")
-    private Boolean la_chinh = false;
+    private Boolean laChinh = false;
 
     @Column(name = "ghi_chu")
-    private String ghi_chu;
+    private String ghiChu;
 }
