@@ -22,26 +22,26 @@ public class DienVien {
 
     @Column(name = "ho_ten", nullable = false)
     @Size(max = 100)
-    private String ho_ten;
+    private String hoTen;
 
     @Column(name = "gioi_tinh")
     @Size(max = 10)
-    private String gioi_tinh;
+    private String gioiTinh;
 
     @Column(name = "ngay_sinh")
-    private LocalDateTime ngay_sinh = LocalDateTime.now();
+    private LocalDateTime ngaySinh = LocalDateTime.now();
 
     @Column(name = "quoc_tich")
     @Size(max = 50)
-    private String quoc_tich;
+    private String quocTich;
 
     @Column(name = "tieu_su")
-    private String tieu_su;
+    private String tieuSu;
 
     @Column(name = "anh_dai_dien")
     @Size(max = 255)
-    private String anh_dai_dien;
+    private String anhDaiDien;
 
     @Column(name = "ngay_tao")
-    private LocalDateTime ngay_tao = LocalDateTime.now();
+    private LocalDateTime ngayTao = LocalDateTime.now();
 }
