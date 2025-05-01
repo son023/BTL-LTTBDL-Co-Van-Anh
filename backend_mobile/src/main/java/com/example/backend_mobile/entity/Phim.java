@@ -37,6 +37,10 @@ public class Phim {
     @Size(max = 100)
     private String daoDien;
 
+    @Column(name = "dien_vien")
+    @Size(max = 1000)
+    private String dienVien;
+
     @Column(name = "mo_ta")
     private String moTa;
 
