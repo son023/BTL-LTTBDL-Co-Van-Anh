@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,5 +42,8 @@ public class LichChieu {
     @ManyToOne
     @JoinColumn(name = "phong_id", nullable = false)
     private Phong phong;
+
+    @OneToMany(mappedBy = "lichChieu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LichChieuGhe> lichChieuGhes = new ArrayList<>();
 
 }
