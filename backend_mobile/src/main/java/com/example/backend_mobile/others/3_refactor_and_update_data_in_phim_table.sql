@@ -1,6 +1,6 @@
 ALTER TABLE phim MODIFY COLUMN mo_ta VARCHAR(5000);
 
-UPDATE movies SET
+UPDATE phim SET
     rating = 8.8,
     director = 'Christopher Nolan',
     cast = 'Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page, Tom Hardy, Ken Watanabe, Cillian Murphy, Marion Cotillard, Michael Caine, Dileep Rao, Tom Berenger',
@@ -17,7 +17,7 @@ UPDATE movies SET
     status = 'Đang chiếu'
 WHERE id = 1;
 
-UPDATE movies SET
+UPDATE phim SET
     rating = 7.6,
     director = 'Quentin Tarantino',
     cast = 'Leonardo DiCaprio, Brad Pitt, Margot Robbie, Margaret Qualley, Austin Butler, Dakota Fanning, Bruce Dern, Al Pacino, Emile Hirsch, Kurt Russell',
@@ -34,7 +34,7 @@ UPDATE movies SET
     status = 'Sắp chiếu'
 WHERE id = 2;
 
-UPDATE movies SET
+UPDATE phim SET
     rating = 7.9,
     director = 'Steven Spielberg',
     cast = 'Tom Hanks, Matt Damon, Edward Burns, Tom Sizemore, Barry Pepper, Vin Diesel, Giovanni Ribisi, Adam Goldberg, Jeremy Davies, Ted Danson.',
@@ -51,7 +51,7 @@ UPDATE movies SET
     status = 'Đang chiếu'
 WHERE id = 3;
 
-UPDATE movies SET
+UPDATE phim SET
     rating = 8.0,
     director = 'James Cameron',
     cast = 'Leonardo DiCaprio, Kate Winslet, Billy Zane, Kathy Bates, Frances Fisher, Danny Nucci, Bill Paxton, David Warner, Jonathan Hyde, Bernard Hill.',
@@ -68,7 +68,7 @@ UPDATE movies SET
     status = 'Đang chiếu'
 WHERE id = 4;
 
-UPDATE movies SET
+UPDATE phim SET
     rating = 7.8,
     director = 'Peter Jackson',
     cast = 'Elijah Wood, Ian McKellen, Viggo Mortensen, Sean Astin, Orlando Bloom, Cate Blanchett, Hugo Weaving, Liv Tyler, John Rhys-Davies, Sean Bean.',
@@ -85,7 +85,7 @@ UPDATE movies SET
     status = 'Đang chiếu'
 WHERE id = 5;
 
-INSERT INTO movies (id, rating, director, cast, duration, age_limit, studio, description, release_year, language, poster_url, title, genre, trailer_url, status) VALUES
+INSERT INTO phim (id, rating, director, cast, duration, age_limit, studio, description, release_year, language, poster_url, title, genre, trailer_url, status) VALUES
 (6, 8.3, 'David Fincher', 'Brad Pitt, Edward Norton, Helena Bonham Carter, Meat Loaf, Jared Leto, Zach Grenier, Richmond Arquette, David Andrews, Christy Scott Cashman, Elliot Gould.', 139, 16, '20th Century Fox', 'Fight Club kể về một người đàn ông (Edward Norton) mệt mỏi với cuộc sống, gặp gỡ Tyler Durden (Brad Pitt), người lập ra một câu lạc bộ chiến đấu ngầm. Câu lạc bộ trở thành một phong trào hỗn loạn, nhưng khi người kể chuyện phát hiện sự thật kinh hoàng về Tyler, mọi thứ dần mất kiểm soát. Bộ phim khám phá chủ nghĩa vật chất, bản sắc và sự tan vỡ của xã hội.', 1995, 'Tiếng Anh', 'https://www.themoviedb.org/t/p/original/iqR0M1ln7Kobjp9liUj2Q7mtQZG.jpg', 'Fight Club', 'Hành động', 'https://www.youtube.com/watch?v=qtRKdVHc-cE', 'Đang chiếu'),
 (7, 7.7, 'Ridley Scott', 'Russell Crowe, Joaquin Phoenix, Connie Nielsen, Oliver Reed, Richard Harris, Derek Jacobi, Djimon Hounsou, Tomas Arana, Ralf Moeller, David Schofield.', 155, 13, 'Universal', 'Gladiator kể về Maximus (Russell Crowe), một tướng quân La Mã bị phản bội và gia đình bị giết hại. Anh trở thành một đấu sĩ và tìm cách trả thù. Maximus chiến đấu trong đấu trường để giành lại danh dự và công lý, đối đầu với Commodus (Joaquin Phoenix), hoàng đế tàn bạo. Bộ phim thể hiện sự hy sinh, lòng trung thành và khát khao tự do.', 2000, 'Tiếng Anh', 'https://m.media-amazon.com/images/M/MV5BMDliMmNhNDEtODUyOS00MjNlLTgxODEtN2U3NzIxMGVkZTA1L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_FMjpg_UX1000_.jpg', 'Gladiator', 'Lịch sử', 'https://www.youtube.com/watch?v=P5ieIbInFpg', 'Đang chiếu'),
 (8, 8.1, 'Christopher Nolan', 'Matthew McConaughey, Anne Hathaway, Jessica Chastain, Michael Caine, Mackenzie Foy, Ellen Burstyn, John Lithgow, Topher Grace, Casey Affleck, Wes Bentley.', 164, 13, 'Warner Bros', 'Interstellar kể về câu chuyện của Cooper (Matthew McConaughey), một phi hành gia được giao nhiệm vụ dẫn dắt một nhóm khám phá không gian để tìm một hành tinh mới cho loài người, khi Trái Đất đang bị tàn phá. Trong hành trình xuyên qua lỗ đen và thời gian, Cooper phải đối mặt với những quyết định khó khăn để cứu cả gia đình và nhân loại. Bộ phim khám phá tình yêu, sự hy sinh và những bí ẩn của vũ trụ.', 2014, 'Tiếng Anh', 'https://cdn.shopify.com/s/files/1/1416/8662/products/interstellar_2014_advance_original_film_art_682852f2-23f6-46de-a1db-4029d5b6f0b4_2000x.jpg?v=1574284010', 'Interstellar', 'Khoa học viễn tưởng', 'https://www.youtube.com/watch?v=zSWdZVtXT7E', 'Sắp chiếu'),
