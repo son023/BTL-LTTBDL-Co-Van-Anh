@@ -3,7 +3,7 @@ package com.example.backend_mobile.controller;
 import com.example.backend_mobile.dtos.LichChieuDTO;
 import com.example.backend_mobile.dtos.response.ApiResponse;
 import com.example.backend_mobile.dtos.response.SoDoGheResponse;
-import com.example.backend_mobile.service.LichChieuService;
+import com.example.backend_mobile.service.ILichChieuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LichChieuController {
 
-    private final LichChieuService lichChieuService;
+    private final ILichChieuService lichChieuService;
 
     @GetMapping("/ngay-chieu/{phimId}")
     public ResponseEntity<ApiResponse<List<LocalDate>>> getNgayChieuByPhimId(

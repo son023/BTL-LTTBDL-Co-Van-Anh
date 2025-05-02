@@ -5,7 +5,7 @@ import com.example.backend_mobile.dtos.response.DatVeResponse;
 import com.example.backend_mobile.entity.*;
 import com.example.backend_mobile.enums.HangThanhVien;
 import com.example.backend_mobile.repository.*;
-import com.example.backend_mobile.service.DatVeService;
+import com.example.backend_mobile.service.IDatVeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DatVeServiceImpl implements DatVeService {
+public class DatVeServiceImpl implements IDatVeService {
 
     private final LichChieuGheRepository lichChieuGheRepository;
     private final VeRepository veRepository;

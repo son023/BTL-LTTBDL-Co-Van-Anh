@@ -5,7 +5,7 @@ import com.example.backend_mobile.dtos.request.DatVeRequest;
 import com.example.backend_mobile.dtos.response.ApiResponse;
 import com.example.backend_mobile.dtos.response.DatVeResponse;
 import com.example.backend_mobile.security.jwt.JwtUtils;
-import com.example.backend_mobile.service.DatVeService;
+import com.example.backend_mobile.service.IDatVeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,12 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/payment")
+@RequestMapping("/dat-ve")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PaymentController {
+public class DatVeController {
 
-     DatVeService datVeService;
+     IDatVeService datVeService;
      JwtUtils jwtUtils;
 
     @PostMapping("/chon-ghe")

@@ -7,7 +7,7 @@ import com.example.backend_mobile.entity.LichChieu;
 import com.example.backend_mobile.entity.LichChieuGhe;
 import com.example.backend_mobile.repository.LichChieuGheRepository;
 import com.example.backend_mobile.repository.LichChieuRepository;
-import com.example.backend_mobile.service.LichChieuService;
+import com.example.backend_mobile.service.ILichChieuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class LichChieuServiceImpl implements LichChieuService {
+public class LichChieuServiceImpl implements ILichChieuService {
 
     private final LichChieuRepository lichChieuRepository;
     private final LichChieuGheRepository lichChieuGheRepository;
