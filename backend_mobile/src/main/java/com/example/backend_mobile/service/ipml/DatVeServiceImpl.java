@@ -31,24 +31,19 @@ public class DatVeServiceImpl implements DatVeService {
     @Override
     @Transactional
     public DatVeResponse chonGhe(DatVeRequest request, Integer khachHangId) {
-        // Lấy thông tin khách hàng
         KhachHang khachHang = khachHangRepository.findById(khachHangId)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
-        // Lấy thông tin lịch chiếu ghế
         LichChieuGhe lichChieuGhe = lichChieuGheRepository.findById(request.getLichChieuGheId())
                 .orElseThrow(() -> new RuntimeException("Ghế không tồn tại"));
 
-        // Kiểm tra trạng thái ghế
         if (!lichChieuGhe.getTrangThai().equals("Trống")) {
             throw new RuntimeException("Ghế đã được đặt");
         }
 
-        // Cập nhật trạng thái ghế là đã chọn
         lichChieuGhe.setTrangThai("Đã chọn");
         lichChieuGheRepository.save(lichChieuGhe);
 
-        // Tạo vé mới với trạng thái "Chờ thanh toán"
         Ve ve = new Ve();
         ve.setMaVe(generateMaVe());
         ve.setGia(lichChieuGhe.getLichChieu().getGiaVe());
@@ -59,7 +54,6 @@ public class DatVeServiceImpl implements DatVeService {
 
         veRepository.save(ve);
 
-        // Tính thời gian giữ ghế (mặc định 5 phút)
         LocalDateTime thoiGianGiuGhe = LocalDateTime.now().plusMinutes(5);
 
         return DatVeResponse.builder()
@@ -74,20 +68,16 @@ public class DatVeServiceImpl implements DatVeService {
     @Override
     @Transactional
     public void huyGhe(Integer lichChieuGheId, Integer khachHangId) {
-        // Lấy thông tin lịch chiếu ghế
         LichChieuGhe lichChieuGhe = lichChieuGheRepository.findById(lichChieuGheId)
                 .orElseThrow(() -> new RuntimeException("Ghế không tồn tại"));
 
-        // Cập nhật trạng thái ghế về "Trống"
         lichChieuGhe.setTrangThai("Trống");
         lichChieuGheRepository.save(lichChieuGhe);
 
-        // Tìm và xóa vé chờ thanh toán tương ứng
         Ve ve = veRepository.findByLichChieuGheIdAndKhachHangIdAndTrangThai(
                 lichChieuGheId, khachHangId, "Chờ thanh toán");
 
         if (ve != null) {
-            // Đánh dấu vé là "Đã hủy" thay vì xóa
             ve.setTrangThai("Đã hủy");
             ve.setGhiChu("Người dùng tự hủy vé");
             veRepository.save(ve);
@@ -97,11 +87,9 @@ public class DatVeServiceImpl implements DatVeService {
     @Override
     @Transactional
     public String taoGiaoDich(Integer lichChieuId, Integer khachHangId) {
-        // Lấy thông tin khách hàng
         KhachHang khachHang = khachHangRepository.findById(khachHangId)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
-        // Lấy danh sách vé chờ thanh toán của khách hàng
         List<Ve> danhSachVe = veRepository.findByKhachHangIdAndTrangThaiAndLichChieuGhe_LichChieu_Id(
                 khachHangId, "Chờ thanh toán", lichChieuId);
 
@@ -109,19 +97,15 @@ public class DatVeServiceImpl implements DatVeService {
             throw new RuntimeException("Không có vé nào chờ thanh toán");
         }
 
-        // Tính tổng tiền
         BigDecimal tongTien = BigDecimal.ZERO;
         for (Ve ve : danhSachVe) {
             tongTien = tongTien.add(ve.getGia());
         }
 
-        // Tính giảm giá dựa trên hạng thành viên
         BigDecimal giamGia = tinhGiamGia(tongTien, khachHang.getHangThanhVien());
 
-        // Tính thành tiền
         BigDecimal thanhTien = tongTien.subtract(giamGia);
 
-        // Tạo giao dịch mới
         GiaoDich giaoDich = new GiaoDich();
         giaoDich.setMaGiaoDich(generateMaGiaoDich());
         giaoDich.setThoiGian(LocalDateTime.now());
@@ -132,23 +116,20 @@ public class DatVeServiceImpl implements DatVeService {
         giaoDich.setTrangThai("Đang xử lý");
         giaoDich.setKhachHang(khachHang);
 
-        // Tạo mã QR cho thanh toán
         String maQR = "maQR";
         giaoDich.setMaQR(maQR);
 
         giaoDichRepository.save(giaoDich);
 
-        // Tạo chi tiết giao dịch
         List<ChiTietGiaoDich> chiTietList = new ArrayList<>();
         for (Ve ve : danhSachVe) {
             ChiTietGiaoDich chiTiet = new ChiTietGiaoDich();
             chiTiet.setGiaoDich(giaoDich);
             chiTiet.setVe(ve);
             chiTiet.setGiaTien(ve.getGia());
-            chiTiet.setGiamGia(BigDecimal.ZERO); // Giảm giá áp dụng ở cấp giao dịch
+            chiTiet.setGiamGia(BigDecimal.ZERO);
             chiTietList.add(chiTiet);
 
-            // Cập nhật trạng thái vé
             ve.setTrangThai("Chờ xác nhận");
             veRepository.save(ve);
         }
@@ -161,18 +142,15 @@ public class DatVeServiceImpl implements DatVeService {
 //    @Override
 //    @Transactional
 //    public void xacNhanThanhToan(String maGiaoDich, Integer khachHangId) {
-//        // Lấy thông tin giao dịch
 //        GiaoDich giaoDich = giaoDichRepository.findByMaGiaoDichAndKhachHangId(maGiaoDich, khachHangId)
 //                .orElseThrow(() -> new RuntimeException("Giao dịch không tồn tại"));
 //
-//        // Cập nhật trạng thái giao dịch
 //        giaoDich.setTrangThai("Đã thanh toán");
 //        giaoDichRepository.save(giaoDich);
 //
 //        // Lấy danh sách chi tiết giao dịch
 //        List<ChiTietGiaoDich> chiTietList = chiTietGiaoDichRepository.findByGiaoDichId(giaoDich.getId());
 //
-//        // Cập nhật trạng thái ghế và vé
 //        for (ChiTietGiaoDich chiTiet : chiTietList) {
 //            Ve ve = chiTiet.getVe();
 //            ve.setTrangThai("Đã thanh toán");
@@ -183,18 +161,15 @@ public class DatVeServiceImpl implements DatVeService {
 //            lichChieuGheRepository.save(lichChieuGhe);
 //        }
 //
-//        // Cập nhật điểm tích lũy cho khách hàng
 //        KhachHang khachHang = giaoDich.getKhachHang();
 //        int diemThem = giaoDich.getThanhTien().intValue() / 10000; // Cứ 10,000 VND = 1 điểm
 //        khachHang.setDiemTichLuy(khachHang.getDiemTichLuy() + diemThem);
 //
-//        // Cập nhật hạng thành viên nếu cần
 //        capNhatHangThanhVien(khachHang);
 //
 //        khachHangRepository.save(khachHang);
 //    }
 
-    // Các phương thức hỗ trợ
     private String generateMaVe() {
         return "V" + System.currentTimeMillis() % 10000000;
     }
