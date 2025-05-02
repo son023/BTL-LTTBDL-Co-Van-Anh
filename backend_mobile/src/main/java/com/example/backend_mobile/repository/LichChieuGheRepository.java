@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface LichChieuGheRepository extends JpaRepository<LichChieuGhe, Integer> {
-    List<LichChieuGhe> findByLichChieu(LichChieu lichChieu);
+    List<LichChieuGhe> findLichChieuGhesByLichChieuId(Integer lichChieuId);
     List<LichChieuGhe> findByLichChieuAndTrangThai(LichChieu lichChieu, String trangThai);
     Optional<LichChieuGhe> findByLichChieuAndGhe(LichChieu lichChieu, Ghe ghe);
 }
