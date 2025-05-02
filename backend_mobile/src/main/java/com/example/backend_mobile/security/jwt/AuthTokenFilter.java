@@ -45,7 +45,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         try {
-
             String jwt = parseJwt(request);
             if (jwt != null) {
                 try {
@@ -57,17 +56,26 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                 userDetails, null, userDetails.getAuthorities());
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+                    } else {
+                        logger.error("Token không hợp lệ");
+                        // KHÔNG set authentication vào SecurityContextHolder
                     }
                 } catch (ParseException | JOSEException e) {
                     logger.error("Không thể parse/validate token: {}", e.getMessage());
+                    // KHÔNG set authentication vào SecurityContextHolder
                 }
+            } else {
+                logger.info("Không tìm thấy token JWT");
+                // KHÔNG set authentication vào SecurityContextHolder
             }
         } catch (Exception e) {
             logger.error("Không thể xác thực người dùng: {}", e.getMessage());
+            // KHÔNG set authentication vào SecurityContextHolder
         }
 
         filterChain.doFilter(request, response);
     }
+
 
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
