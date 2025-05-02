@@ -42,6 +42,7 @@ public class Phim {
     private String dienVien;
 
     @Column(name = "mo_ta")
+    @Size(max = 5000)
     private String moTa;
 
     @Column(name = "poster")
