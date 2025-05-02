@@ -1,5 +1,6 @@
 package com.example.backend_mobile.controller;
 
+import com.example.backend_mobile.dtos.response.VeDTO;
 import com.example.backend_mobile.entity.Ve;
 import com.example.backend_mobile.service.ITicketService;
 import lombok.AccessLevel;
@@ -21,7 +22,7 @@ public class TicketController {
     ITicketService ticketService;
 
     @GetMapping("/history/all")
-    public ResponseEntity<List<Ve>> allTickets() {
+    public ResponseEntity<List<VeDTO>> allTickets() {
         return ticketService.getAllHistoryOrder();
     }
 }

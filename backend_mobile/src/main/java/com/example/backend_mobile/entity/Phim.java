@@ -51,7 +51,7 @@ public class Phim {
     @Column(name = "nam_sx")
     private Integer namSx;
 
-    @Column(name = "hang_sx")
+    @Column(name = "hang_san_xuat")
     @Size(max = 100)
     private String hangSx;
 
