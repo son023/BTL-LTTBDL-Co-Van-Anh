@@ -7,7 +7,7 @@ import com.example.backend_mobile.dtos.response.SoDoGheResponse;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface LichChieuService {
+public interface ILichChieuService {
 
     List<LocalDate> getNgayChieuByPhimId(Integer phimId);
 
