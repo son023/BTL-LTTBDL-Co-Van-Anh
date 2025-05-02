@@ -87,4 +87,13 @@ public class JwtUtils {
         SignedJWT signedJWT = SignedJWT.parse(token);
         return signedJWT.getJWTClaimsSet().getClaims();
     }
+
+    public Integer getKhachHangIdFromToken(String token) throws ParseException {
+        Map<String, Object> claims = getClaimsFromToken(token);
+        Object customerId = claims.get("id");
+        if (customerId != null) {
+            return Integer.valueOf(customerId.toString());
+        }
+        return 1;
+    }
 }
