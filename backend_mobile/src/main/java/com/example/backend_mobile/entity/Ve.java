@@ -1,6 +1,5 @@
 package com.example.backend_mobile.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,13 +34,9 @@ public class Ve {
     @Column(name = "ghi_chu", columnDefinition = "TEXT")
     private String ghiChu;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lich_chieu_id", nullable = false)
-    private LichChieu lichChieu;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ghe_id", nullable = false)
-    private Ghe ghe;
+    @OneToOne
+    @JoinColumn(name = "lich_chieu_ghe_id", nullable = false)
+    private LichChieuGhe lichChieuGhe;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "khach_hang_id", nullable = false)
