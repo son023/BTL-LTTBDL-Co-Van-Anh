@@ -52,17 +52,17 @@ public class TicketServiceImpl implements ITicketService {
             dto.setTrangThai(ve.getTrangThai());
             dto.setGhiChu(ve.getGhiChu());
 
-            if (ve.getLichChieu() != null) {
-                dto.setLichChieuId(ve.getLichChieu().getId());
-                if (ve.getLichChieu().getPhim() != null)
-                    dto.setTenPhim(ve.getLichChieu().getPhim().getTen());
-                if (ve.getLichChieu().getPhong() != null)
-                    dto.setTenPhong(ve.getLichChieu().getPhong().getTen());
+            if (ve.getLichChieuGhe().getLichChieu() != null) {
+                dto.setLichChieuId(ve.getLichChieuGhe().getLichChieu().getId());
+                if (ve.getLichChieuGhe().getLichChieu().getPhim() != null)
+                    dto.setTenPhim(ve.getLichChieuGhe().getLichChieu().getPhim().getTen());
+                if (ve.getLichChieuGhe().getLichChieu().getPhong() != null)
+                    dto.setTenPhong(ve.getLichChieuGhe().getLichChieu().getPhong().getTen());
             }
 
-            if (ve.getGhe() != null) {
-                dto.setGheId(ve.getGhe().getId());
-                dto.setTenGhe(ve.getGhe().getTen());
+            if (ve.getLichChieuGhe().getGhe() != null) {
+                dto.setGheId(ve.getLichChieuGhe().getGhe().getId());
+                dto.setTenGhe(ve.getLichChieuGhe().getGhe().getTen());
             }
 
             if (ve.getKhachHang() != null) {

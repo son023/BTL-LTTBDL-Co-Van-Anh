@@ -40,12 +40,12 @@ public class VeDTO {
         dto.setTrangThai(ve.getTrangThai());
         dto.setGhiChu(ve.getGhiChu());
 
-        dto.setLichChieuId(ve.getLichChieu().getId());
-        dto.setTenPhim(ve.getLichChieu().getPhim().getTen()); // nếu có
-        dto.setTenPhong(ve.getLichChieu().getPhong().getTen()); // nếu có
+        dto.setLichChieuId(ve.getLichChieuGhe().getLichChieu().getId());
+        dto.setTenPhim(ve.getLichChieuGhe().getLichChieu().getPhim().getTen()); // nếu có
+        dto.setTenPhong(ve.getLichChieuGhe().getLichChieu().getPhong().getTen()); // nếu có
 
-        dto.setGheId(ve.getGhe().getId());
-        dto.setTenGhe(ve.getGhe().getTen());
+        dto.setGheId(ve.getLichChieuGhe().getGhe().getId());
+        dto.setTenGhe(ve.getLichChieuGhe().getGhe().getTen());
 
         dto.setKhachHangId(ve.getKhachHang().getId());
         dto.setTenKhachHang(ve.getKhachHang().getTen());
