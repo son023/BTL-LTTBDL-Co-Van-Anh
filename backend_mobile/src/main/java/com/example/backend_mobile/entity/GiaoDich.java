@@ -34,9 +34,6 @@ public class GiaoDich {
     @Column(name = "thanh_tien", precision = 10, scale = 2)
     private BigDecimal thanhTien;
 
-    @Column(name = "phuong_thuc", nullable = false, length = 20)
-    private String phuongThuc = "Chuyển khoản";
-
     @Column(name = "trang_thai", length = 20)
     private String trangThai = "Đang xử lý";
 
@@ -52,4 +49,8 @@ public class GiaoDich {
 
     @OneToMany(mappedBy = "giaoDich", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ChiTietGiaoDich> chiTietGiaoDich;
+
+    @ManyToOne
+    @JoinColumn(name = "phuong_thuc", nullable = false)
+    private ThanhToan thanhToan;
 }

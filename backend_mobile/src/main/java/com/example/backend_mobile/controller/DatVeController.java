@@ -9,6 +9,7 @@ import com.example.backend_mobile.service.IDatVeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +64,16 @@ public class DatVeController {
             return ResponseEntity.ok(new ApiResponse<>(true, "Tạo giao dịch thành công", maQR));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+        }
+    }
+
+    @PostMapping("/enable/{methodId}")
+    public ResponseEntity<String> enablePaymentMethod(@PathVariable int methodId) {
+        boolean success = datVeService.enablePaymentMethod(methodId);
+        if (success) {
+            return ResponseEntity.ok("Payment method enabled successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Payment method not found.");
         }
     }
 
