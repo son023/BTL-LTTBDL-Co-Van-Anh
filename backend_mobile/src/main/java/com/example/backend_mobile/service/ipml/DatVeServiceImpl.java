@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,6 +28,8 @@ public class DatVeServiceImpl implements IDatVeService {
     private final KhachHangRepository khachHangRepository;
     private final GiaoDichRepository giaoDichRepository;
     private final ChiTietGiaoDichRepository chiTietGiaoDichRepository;
+    private final ThanhToanRepository ThanhToanRepository;
+    private final ThanhToanRepository thanhToanRepository;
 
     @Override
     @Transactional
@@ -112,7 +115,6 @@ public class DatVeServiceImpl implements IDatVeService {
         giaoDich.setTongTien(tongTien);
         giaoDich.setGiamGia(giamGia);
         giaoDich.setThanhTien(thanhTien);
-        giaoDich.setPhuongThuc("Chuyển khoản");
         giaoDich.setTrangThai("Đang xử lý");
         giaoDich.setKhachHang(khachHang);
 
@@ -137,6 +139,18 @@ public class DatVeServiceImpl implements IDatVeService {
         chiTietGiaoDichRepository.saveAll(chiTietList);
 
         return maQR;
+    }
+
+    @Override
+    public boolean enablePaymentMethod(int methodId) {
+        Optional<ThanhToan> optionalThanhToan = thanhToanRepository.findById(methodId);
+        if (optionalThanhToan.isPresent()) {
+            ThanhToan thanhToan = optionalThanhToan.get();
+            thanhToan.setStatus(1);
+            thanhToanRepository.save(thanhToan);
+            return true;
+        }
+        return false;
     }
 
 //    @Override
@@ -204,4 +218,6 @@ public class DatVeServiceImpl implements IDatVeService {
             khachHang.setHangThanhVien(HangThanhVien.THUONG);
         }
     }
+
+
 }
