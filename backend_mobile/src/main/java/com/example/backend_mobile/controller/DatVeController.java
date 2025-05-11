@@ -68,8 +68,8 @@ public class DatVeController {
     }
 
     @PostMapping("/enable/{methodId}")
-    public ResponseEntity<String> enablePaymentMethod(@PathVariable int methodId) {
-        boolean success = datVeService.enablePaymentMethod(methodId);
+    public ResponseEntity<String> enablePaymentMethod(@PathVariable int methodId, @RequestParam("stk") String stk) {
+        boolean success = datVeService.enablePaymentMethod(methodId, stk);
         if (success) {
             return ResponseEntity.ok("Payment method enabled successfully.");
         } else {

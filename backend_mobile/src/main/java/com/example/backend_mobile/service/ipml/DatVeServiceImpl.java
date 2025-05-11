@@ -5,9 +5,12 @@ import com.example.backend_mobile.dtos.response.DatVeResponse;
 import com.example.backend_mobile.entity.*;
 import com.example.backend_mobile.enums.HangThanhVien;
 import com.example.backend_mobile.repository.*;
+import com.example.backend_mobile.security.service.UserDetailsImpl;
 import com.example.backend_mobile.service.IDatVeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +31,8 @@ public class DatVeServiceImpl implements IDatVeService {
     private final KhachHangRepository khachHangRepository;
     private final GiaoDichRepository giaoDichRepository;
     private final ChiTietGiaoDichRepository chiTietGiaoDichRepository;
-    private final ThanhToanRepository ThanhToanRepository;
     private final ThanhToanRepository thanhToanRepository;
+    private final ChiTietPhuongThucRepository chiTietPhuongThucRepository;
 
     @Override
     @Transactional
@@ -142,13 +145,28 @@ public class DatVeServiceImpl implements IDatVeService {
     }
 
     @Override
-    public boolean enablePaymentMethod(int methodId) {
-        Optional<ThanhToan> optionalThanhToan = thanhToanRepository.findById(methodId);
-        if (optionalThanhToan.isPresent()) {
-            ThanhToan thanhToan = optionalThanhToan.get();
-            thanhToan.setStatus(1);
-            thanhToanRepository.save(thanhToan);
+    public boolean enablePaymentMethod(int methodId, String stk) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!(authentication.getPrincipal() instanceof UserDetailsImpl)) {
+            throw new RuntimeException("Người dùng chưa đăng nhập hoặc sai kiểu dữ liệu!");
+        }
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        int currentUserId = userDetails.getId();
+
+        try {
+            ChiTietPhuongThuc newEnableMethod = new ChiTietPhuongThuc();
+            Optional<ThanhToan> thanhToan = thanhToanRepository.findById(methodId);
+            Optional<KhachHang> khachHang = khachHangRepository.findById(currentUserId);
+            khachHang.ifPresent(newEnableMethod::setKhachHang);
+            thanhToan.ifPresent(newEnableMethod::setThanhToan);
+            newEnableMethod.setStatus("ENABLE");
+            newEnableMethod.setStk(stk);
+
+            chiTietPhuongThucRepository.save(newEnableMethod);
             return true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

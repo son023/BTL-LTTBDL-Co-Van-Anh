@@ -13,5 +13,5 @@ public interface IDatVeService {
 
 //    void xacNhanThanhToan(String maGiaoDich, Integer khachHangId);
 
-    boolean enablePaymentMethod(int methodId);
+    boolean enablePaymentMethod(int methodId, String stk);
 }
