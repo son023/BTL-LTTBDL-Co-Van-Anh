@@ -13,5 +13,5 @@ public interface IDatVeService {
 
     ThanhToanResponse thanhToan(ThanhToanRequest datVeRequest, Integer khachHangId);
 
-    boolean enablePaymentMethod(int methodId);
+    boolean enablePaymentMethod(int methodId, String stk);
 }
