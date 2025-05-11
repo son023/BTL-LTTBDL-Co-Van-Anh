@@ -18,9 +18,6 @@ public class ThanhToan {
     @Column(name = "ten", nullable = false, unique = true)
     private String ten;
 
-    @Column(name = "so_tai_khoan", nullable = false, unique = true)
-    private String stk;
-
     @Column(name = "status", nullable = false, unique = true)
     private int status;
 }
