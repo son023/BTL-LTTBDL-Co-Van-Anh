@@ -7,5 +7,5 @@ import java.util.List;
 public class ThanhToanRequest {
     private List<Integer> lichChieuGheIds;
     private Double tongTien;
-    private String phuongThucThanhToan;
+    private Integer phuongThucThanhToanId;
 }

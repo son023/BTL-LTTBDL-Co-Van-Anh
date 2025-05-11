@@ -65,7 +65,7 @@ public class DatVeController {
     }
 
     @PostMapping("/thanh-toan")
-    public ResponseEntity<ApiResponse<ThanhToanResponse>> thanhToan(
+    public ResponseEntity<ThanhToanResponse> thanhToan(
             @RequestBody ThanhToanRequest request,
             @RequestHeader("Authorization") String token) {
         try {
@@ -73,9 +73,9 @@ public class DatVeController {
             Integer khachHangId = jwtUtils.getKhachHangIdFromToken(jwtToken);
 
             ThanhToanResponse response = datVeService.thanhToan(request, khachHangId);
-            return ResponseEntity.ok(new ApiResponse<>(true, "Thanh toán thành công", response));
+            return ResponseEntity.ok( response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

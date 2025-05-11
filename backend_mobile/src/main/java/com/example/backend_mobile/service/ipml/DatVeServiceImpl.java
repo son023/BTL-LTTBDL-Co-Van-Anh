@@ -135,8 +135,8 @@ public class DatVeServiceImpl implements IDatVeService {
                 .thanhTien(thanhTien)
                 .trangThai("Đã thanh toán")
                 .khachHang(khachHang)
+                .thanhToan(thanhToanRepository.findById(request.getPhuongThucThanhToanId()).get())
                 .maQR(generateMaQR())
-
                 .build();
         giaoDichRepository.save(giaoDich);
 
@@ -197,7 +197,7 @@ public class DatVeServiceImpl implements IDatVeService {
         return "QR" + UUID.randomUUID().toString().substring(0, 10).toUpperCase();
     }
     private String generateMaVe() {
-        return "V" + System.currentTimeMillis() % 10000000;
+        return "V" + UUID.randomUUID().toString().substring(0, 10);
     }
 
     private String generateMaGiaoDich() {
