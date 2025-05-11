@@ -31,13 +31,14 @@ public class LichChieuController {
             @PathVariable Integer phimId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngay) {
         List<LichChieuDTO> lichChieuList = lichChieuService.getGioChieuByPhimIdAndNgay(phimId, ngay);
+        if(lichChieuList.isEmpty()) return ResponseEntity.ok(new ApiResponse<>(false, "Không tìm thấy giờ chiếu", null));
         return ResponseEntity.ok(new ApiResponse<>(true, "Lấy giờ chiếu thành công", lichChieuList));
     }
 
     @GetMapping("/so-do-ghe/{lichChieuId}")
-    public ResponseEntity<ApiResponse<SoDoGheResponse>> getSoDoGheByLichChieuId(
+    public ResponseEntity<SoDoGheResponse> getSoDoGheByLichChieuId(
             @PathVariable Integer lichChieuId) {
         SoDoGheResponse soDoGhe = lichChieuService.getSoDoGheByLichChieuId(lichChieuId);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Lấy sơ đồ ghế thành công", soDoGhe));
+        return ResponseEntity.ok(soDoGhe);
     }
 }

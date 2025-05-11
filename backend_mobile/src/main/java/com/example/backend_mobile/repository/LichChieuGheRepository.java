@@ -6,6 +6,7 @@ import com.example.backend_mobile.entity.Ghe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,6 @@ public interface LichChieuGheRepository extends JpaRepository<LichChieuGhe, Inte
     List<LichChieuGhe> findLichChieuGhesByLichChieuId(Integer lichChieuId);
     List<LichChieuGhe> findByLichChieuAndTrangThai(LichChieu lichChieu, String trangThai);
     Optional<LichChieuGhe> findByLichChieuAndGhe(LichChieu lichChieu, Ghe ghe);
+
+    List<LichChieuGhe> findAllByTrangThaiAndThoiGianHetHanBefore(String trangThai, LocalDateTime thoiGian);
 }

@@ -2,6 +2,7 @@ package com.example.backend_mobile.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class GiaoDich {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
