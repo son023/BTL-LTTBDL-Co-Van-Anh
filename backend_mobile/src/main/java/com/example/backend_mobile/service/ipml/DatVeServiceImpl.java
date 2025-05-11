@@ -1,7 +1,7 @@
 package com.example.backend_mobile.service.ipml;
 
-import com.example.backend_mobile.dtos.request.DatVeRequest;
-import com.example.backend_mobile.dtos.response.DatVeResponse;
+import com.example.backend_mobile.dtos.request.ThanhToanRequest;
+import com.example.backend_mobile.dtos.response.ThanhToanResponse;
 import com.example.backend_mobile.entity.*;
 import com.example.backend_mobile.enums.HangThanhVien;
 import com.example.backend_mobile.repository.*;
@@ -33,39 +33,25 @@ public class DatVeServiceImpl implements IDatVeService {
 
     @Override
     @Transactional
-    public DatVeResponse chonGhe(DatVeRequest request, Integer khachHangId) {
+    public String chonGhe(List<Integer> lichChieuGheId, Integer khachHangId) {
         KhachHang khachHang = khachHangRepository.findById(khachHangId)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
-        LichChieuGhe lichChieuGhe = lichChieuGheRepository.findById(request.getLichChieuGheId())
-                .orElseThrow(() -> new RuntimeException("Ghế không tồn tại"));
+        for(Integer i: lichChieuGheId) {
+            LichChieuGhe lichChieuGhe = lichChieuGheRepository.findById(i)
+                    .orElseThrow(() -> new RuntimeException("Ghế không tồn tại"));
 
-        if (!lichChieuGhe.getTrangThai().equals("Trống")) {
-            throw new RuntimeException("Ghế đã được đặt");
+            if (!lichChieuGhe.getTrangThai().equals("Trống")) {
+                throw new RuntimeException("Ghế đã được đặt");
+            }
+
+            lichChieuGhe.setTrangThai("Đã chọn");
+            lichChieuGhe.setThoiGianGiu(LocalDateTime.now());
+            lichChieuGhe.setThoiGianHetHan(LocalDateTime.now().plusMinutes(5));
+            lichChieuGheRepository.save(lichChieuGhe);
         }
 
-        lichChieuGhe.setTrangThai("Đã chọn");
-        lichChieuGheRepository.save(lichChieuGhe);
-
-        Ve ve = new Ve();
-        ve.setMaVe(generateMaVe());
-        ve.setGia(lichChieuGhe.getLichChieu().getGiaVe());
-        ve.setNgayTao(LocalDateTime.now());
-        ve.setTrangThai("Chờ thanh toán");
-        ve.setLichChieuGhe(lichChieuGhe);
-        ve.setKhachHang(khachHang);
-
-        veRepository.save(ve);
-
-        LocalDateTime thoiGianGiuGhe = LocalDateTime.now().plusMinutes(5);
-
-        return DatVeResponse.builder()
-                .veId(ve.getId())
-                .maVe(ve.getMaVe())
-                .tenGhe(lichChieuGhe.getGhe().getTen())
-                .giaVe(ve.getGia())
-                .thoiGianGiuGhe(thoiGianGiuGhe)
-                .build();
+        return "Thanh cong";
     }
 
     @Override
@@ -74,71 +60,11 @@ public class DatVeServiceImpl implements IDatVeService {
         LichChieuGhe lichChieuGhe = lichChieuGheRepository.findById(lichChieuGheId)
                 .orElseThrow(() -> new RuntimeException("Ghế không tồn tại"));
 
+        // Chỉ cần cập nhật trạng thái ghế về trống
         lichChieuGhe.setTrangThai("Trống");
+        lichChieuGhe.setThoiGianGiu(null);
+        lichChieuGhe.setThoiGianHetHan(null);
         lichChieuGheRepository.save(lichChieuGhe);
-
-        Ve ve = veRepository.findByLichChieuGheIdAndKhachHangIdAndTrangThai(
-                lichChieuGheId, khachHangId, "Chờ thanh toán");
-
-        if (ve != null) {
-            ve.setTrangThai("Đã hủy");
-            ve.setGhiChu("Người dùng tự hủy vé");
-            veRepository.save(ve);
-        }
-    }
-
-    @Override
-    @Transactional
-    public String taoGiaoDich(Integer lichChieuId, Integer khachHangId) {
-        KhachHang khachHang = khachHangRepository.findById(khachHangId)
-                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
-
-        List<Ve> danhSachVe = veRepository.findByKhachHangIdAndTrangThaiAndLichChieuGhe_LichChieu_Id(
-                khachHangId, "Chờ thanh toán", lichChieuId);
-
-        if (danhSachVe.isEmpty()) {
-            throw new RuntimeException("Không có vé nào chờ thanh toán");
-        }
-
-        BigDecimal tongTien = BigDecimal.ZERO;
-        for (Ve ve : danhSachVe) {
-            tongTien = tongTien.add(ve.getGia());
-        }
-
-        BigDecimal giamGia = tinhGiamGia(tongTien, khachHang.getHangThanhVien());
-
-        BigDecimal thanhTien = tongTien.subtract(giamGia);
-
-        GiaoDich giaoDich = new GiaoDich();
-        giaoDich.setMaGiaoDich(generateMaGiaoDich());
-        giaoDich.setThoiGian(LocalDateTime.now());
-        giaoDich.setTongTien(tongTien);
-        giaoDich.setGiamGia(giamGia);
-        giaoDich.setThanhTien(thanhTien);
-        giaoDich.setTrangThai("Đang xử lý");
-        giaoDich.setKhachHang(khachHang);
-
-        String maQR = "maQR";
-        giaoDich.setMaQR(maQR);
-
-        giaoDichRepository.save(giaoDich);
-
-        List<ChiTietGiaoDich> chiTietList = new ArrayList<>();
-        for (Ve ve : danhSachVe) {
-            ChiTietGiaoDich chiTiet = new ChiTietGiaoDich();
-            chiTiet.setGiaoDich(giaoDich);
-            chiTiet.setVe(ve);
-            chiTiet.setGiaTien(ve.getGia());
-            chiTiet.setGiamGia(BigDecimal.ZERO);
-            chiTietList.add(chiTiet);
-
-            ve.setTrangThai("Chờ xác nhận");
-            veRepository.save(ve);
-        }
-
-        chiTietGiaoDichRepository.saveAll(chiTietList);
-
-        return maQR;
     }
 
     @Override
@@ -153,37 +79,105 @@ public class DatVeServiceImpl implements IDatVeService {
         return false;
     }
 
-//    @Override
-//    @Transactional
-//    public void xacNhanThanhToan(String maGiaoDich, Integer khachHangId) {
-//        GiaoDich giaoDich = giaoDichRepository.findByMaGiaoDichAndKhachHangId(maGiaoDich, khachHangId)
-//                .orElseThrow(() -> new RuntimeException("Giao dịch không tồn tại"));
-//
-//        giaoDich.setTrangThai("Đã thanh toán");
-//        giaoDichRepository.save(giaoDich);
-//
-//        // Lấy danh sách chi tiết giao dịch
-//        List<ChiTietGiaoDich> chiTietList = chiTietGiaoDichRepository.findByGiaoDichId(giaoDich.getId());
-//
-//        for (ChiTietGiaoDich chiTiet : chiTietList) {
-//            Ve ve = chiTiet.getVe();
-//            ve.setTrangThai("Đã thanh toán");
-//            veRepository.save(ve);
-//
-//            LichChieuGhe lichChieuGhe = ve.getLichChieuGhe();
-//            lichChieuGhe.setTrangThai("Đã đặt");
-//            lichChieuGheRepository.save(lichChieuGhe);
-//        }
-//
-//        KhachHang khachHang = giaoDich.getKhachHang();
-//        int diemThem = giaoDich.getThanhTien().intValue() / 10000; // Cứ 10,000 VND = 1 điểm
-//        khachHang.setDiemTichLuy(khachHang.getDiemTichLuy() + diemThem);
-//
-//        capNhatHangThanhVien(khachHang);
-//
-//        khachHangRepository.save(khachHang);
-//    }
+    @Override
+    @Transactional
+    public ThanhToanResponse thanhToan(ThanhToanRequest request, Integer khachHangId) {
+        KhachHang khachHang = khachHangRepository.findById(khachHangId)
+                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
+        List<LichChieuGhe> danhSachGhe = new ArrayList<>();
+        List<String> tenGheDaDat = new ArrayList<>();
+
+        for (Integer lichChieuGheId : request.getLichChieuGheIds()) {
+            LichChieuGhe lichChieuGhe = lichChieuGheRepository.findById(lichChieuGheId)
+                    .orElseThrow(() -> new RuntimeException("Ghế không tồn tại: " + lichChieuGheId));
+
+            if (!"Đã chọn".equals(lichChieuGhe.getTrangThai())) {
+                throw new RuntimeException("Ghế " + lichChieuGhe.getGhe().getTen() + " không được giữ");
+            }
+
+            if (lichChieuGhe.getThoiGianHetHan() != null &&
+                    lichChieuGhe.getThoiGianHetHan().isBefore(LocalDateTime.now())) {
+                throw new RuntimeException("Ghế " + lichChieuGhe.getGhe().getTen() + " đã hết thời gian giữ");
+            }
+
+            danhSachGhe.add(lichChieuGhe);
+            tenGheDaDat.add(lichChieuGhe.getGhe().getTen());
+        }
+
+        BigDecimal tongTien = BigDecimal.valueOf(request.getTongTien());
+        BigDecimal giamGia = tinhGiamGia(tongTien, khachHang.getHangThanhVien());
+        BigDecimal thanhTien = tongTien.subtract(giamGia);
+
+        GiaoDich giaoDich = new GiaoDich().builder()
+                .maGiaoDich(generateMaGiaoDich())
+                .thoiGian(LocalDateTime.now())
+                .tongTien(tongTien)
+                .giamGia(giamGia)
+                .thanhTien(thanhTien)
+                .trangThai("Đã thanh toán")
+                .khachHang(khachHang)
+                .maQR(generateMaQR())
+
+                .build();
+        giaoDichRepository.save(giaoDich);
+
+        // 4. Tạo vé
+        List<String> maCacVe = new ArrayList<>();
+        List<Ve> danhSachVe = new ArrayList<>();
+        List<ChiTietGiaoDich> chiTietList = new ArrayList<>();
+
+        for (LichChieuGhe lichChieuGhe : danhSachGhe) {
+            // Tạo vé
+            Ve ve = new Ve().builder()
+                    .maVe(generateMaVe())
+                    .gia(lichChieuGhe.getLichChieu().getGiaVe())
+                    .ngayTao(LocalDateTime.now())
+                    .trangThai("Đã thanh toán")
+                    .lichChieuGhe(lichChieuGhe)
+                    .khachHang(khachHang)
+                    .build();
+
+            danhSachVe.add(ve);
+            maCacVe.add(ve.getMaVe());
+
+            // Tạo chi tiết giao dịch
+            ChiTietGiaoDich chiTiet = new ChiTietGiaoDich().builder()
+                    .giaoDich(giaoDich)
+                    .ve(ve)
+                    .giamGia(BigDecimal.ZERO)
+                    .giaTien(ve.getGia()).build();
+            chiTietList.add(chiTiet);
+
+            // Cập nhật trạng thái ghế
+            lichChieuGhe.setTrangThai("Đã đặt");
+            lichChieuGhe.setThoiGianGiu(null);
+            lichChieuGhe.setThoiGianHetHan(null);
+            lichChieuGheRepository.save(lichChieuGhe);
+        }
+
+        veRepository.saveAll(danhSachVe);
+        chiTietGiaoDichRepository.saveAll(chiTietList);
+
+        // 5. Cập nhật điểm tích lũy
+        int diemThem = thanhTien.intValue() / 10000;
+        khachHang.setDiemTichLuy(khachHang.getDiemTichLuy() + diemThem);
+        capNhatHangThanhVien(khachHang);
+        khachHangRepository.save(khachHang);
+
+        // 6. Trả về response
+        return ThanhToanResponse.builder()
+                .maQR(giaoDich.getMaQR())
+                .maGiaoDich(giaoDich.getMaGiaoDich())
+                .gheDaDat(tenGheDaDat)
+                .tongTien(thanhTien.doubleValue())
+                .maCacVe(maCacVe)
+                .build();
+    }
+
+    private String generateMaQR() {
+        return "QR" + UUID.randomUUID().toString().substring(0, 10).toUpperCase();
+    }
     private String generateMaVe() {
         return "V" + System.currentTimeMillis() % 10000000;
     }

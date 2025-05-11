@@ -124,24 +124,209 @@ INSERT INTO lich_chieu (id, bat_dau, gia_ve, ket_thuc, ngay_lap, trang_thai, phi
                                                                                                     (5, '2025-05-05 16:00:00', 100000.00, '2025-05-05 18:30:00', '2025-05-01 08:00:00', 'Đang mở', 4, 3);
 
 -- Thêm dữ liệu mẫu cho bảng lich_chieu_ghe
--- Lịch chiếu 1, Phòng 1 - Khởi tạo tất cả ghế trạng thái "Trống"
-INSERT INTO lich_chieu_ghe (id, lich_chieu_id, ghe_id, trang_thai) VALUES
--- Một vài ghế ví dụ cho lịch chiếu 1
-(1, 1, 1, 'Trống'),  -- A1
-(2, 1, 2, 'Trống'),  -- A2
-(3, 1, 3, 'Trống'),  -- A3
-(4, 1, 4, 'Đã đặt'), -- A4
-(5, 1, 5, 'Đã đặt'), -- A5
-(6, 1, 6, 'Trống'),  -- A6
--- Hàng B
-(7, 1, 7, 'Trống'),  -- B1
-(8, 1, 8, 'Trống'),  -- B2
-(9, 1, 9, 'Đã đặt'), -- B3 (VIP)
-(10, 1, 10, 'Đã đặt'), -- B4 (VIP)
--- Thêm vài ghế đã được đặt cho ghế VIP ở hàng E
-(31, 1, 31, 'Đã đặt'), -- E1 (VIP)
-(32, 1, 32, 'Đã đặt'), -- E2 (VIP)
-(33, 1, 33, 'Đã đặt'); -- E3 (VIP)
+
+
+INSERT INTO lich_chieu_ghe (lich_chieu_id, ghe_id, trang_thai) VALUES
+-- Hàng A (ghế 1-6): một vài ghế đã đặt
+(1, 1, 'Trống'),   -- A1 (Thường)
+(1, 2, 'Trống'),   -- A2 (Thường)
+(1, 3, 'Đã đặt'),  -- A3 (Thường)
+(1, 4, 'Đã đặt'),  -- A4 (Thường)
+(1, 5, 'Trống'),   -- A5 (Thường)
+(1, 6, 'Trống'),   -- A6 (Thường)
+
+-- Hàng B (ghế 7-14): ghế VIP ở giữa đã đặt
+(1, 7, 'Trống'),   -- B1 (Thường)
+(1, 8, 'Trống'),   -- B2 (Thường)
+(1, 9, 'Đã đặt'),  -- B3 (VIP)
+(1, 10, 'Đã đặt'), -- B4 (VIP)
+(1, 11, 'Trống'),  -- B5 (Thường)
+(1, 12, 'Trống'),  -- B6 (Thường)
+(1, 13, 'Trống'),  -- B7 (Thường)
+(1, 14, 'Trống'),  -- B8 (Thường)
+
+-- Hàng C (ghế 15-22): một số ghế VIP đã đặt
+(1, 15, 'Trống'),  -- C1 (Thường)
+(1, 16, 'Trống'),  -- C2 (Thường)
+(1, 17, 'Trống'),  -- C3 (Thường)
+(1, 18, 'Trống'),  -- C4 (Thường)
+(1, 19, 'Trống'),  -- C5 (Thường)
+(1, 20, 'Đã đặt'), -- C6 (VIP)
+(1, 21, 'Đã đặt'), -- C7 (VIP)
+(1, 22, 'Trống'),  -- C8 (VIP)
+
+-- Hàng D (ghế 23-30): một ghế VIP đã đặt
+(1, 23, 'Trống'),  -- D1 (Thường)
+(1, 24, 'Đã đặt'), -- D2 (VIP)
+(1, 25, 'Trống'),  -- D3 (Thường)
+(1, 26, 'Trống'),  -- D4 (Thường)
+(1, 27, 'Trống'),  -- D5 (Thường)
+(1, 28, 'Trống'),  -- D6 (Thường)
+(1, 29, 'Trống'),  -- D7 (Thường)
+(1, 30, 'Trống'),  -- D8 (Thường)
+
+-- Hàng E (ghế 31-38): ghế VIP đầu hàng đã đặt
+(1, 31, 'Đã đặt'), -- E1 (VIP)
+(1, 32, 'Đã đặt'), -- E2 (VIP)
+(1, 33, 'Đã đặt'), -- E3 (VIP)
+(1, 34, 'Trống'),  -- E4 (Thường)
+(1, 35, 'Trống'),  -- E5 (VIP)
+(1, 36, 'Trống'),  -- E6 (Thường)
+(1, 37, 'Trống'),  -- E7 (Thường)
+(1, 38, 'Trống'),  -- E8 (Thường)
+
+-- Hàng F (ghế 39-44): 2 ghế VIP cuối đã đặt
+(1, 39, 'Trống'),  -- F1 (Thường)
+(1, 40, 'Trống'),  -- F2 (Thường)
+(1, 41, 'Trống'),  -- F3 (Thường)
+(1, 42, 'Trống'),  -- F4 (Thường)
+(1, 43, 'Đã đặt'), -- F5 (VIP)
+(1, 44, 'Đã đặt'); -- F6 (VIP)
+
+-- Thêm dữ liệu cho lịch chiếu 2 (khung giờ khác, phòng 1)
+INSERT INTO lich_chieu_ghe (lich_chieu_id, ghe_id, trang_thai) VALUES
+-- Tất cả ghế trống
+(2, 1, 'Trống'),   -- A1
+(2, 2, 'Trống'),   -- A2
+(2, 3, 'Trống'),   -- A3
+(2, 4, 'Trống'),   -- A4
+(2, 5, 'Trống'),   -- A5
+(2, 6, 'Trống'),   -- A6
+(2, 7, 'Trống'),   -- B1
+(2, 8, 'Trống'),   -- B2
+(2, 9, 'Trống'),   -- B3 (VIP)
+(2, 10, 'Trống'),  -- B4 (VIP)
+(2, 11, 'Trống'),  -- B5
+(2, 12, 'Trống'),  -- B6
+(2, 13, 'Trống'),  -- B7
+(2, 14, 'Trống'),  -- B8
+(2, 15, 'Trống'),  -- C1
+(2, 16, 'Trống'),  -- C2
+(2, 17, 'Trống'),  -- C3
+(2, 18, 'Trống'),  -- C4
+(2, 19, 'Trống'),  -- C5
+(2, 20, 'Trống'),  -- C6 (VIP)
+(2, 21, 'Trống'),  -- C7 (VIP)
+(2, 22, 'Trống'),  -- C8 (VIP)
+(2, 23, 'Trống'),  -- D1
+(2, 24, 'Trống'),  -- D2 (VIP)
+(2, 25, 'Trống'),  -- D3
+(2, 26, 'Trống'),  -- D4
+(2, 27, 'Trống'),  -- D5
+(2, 28, 'Trống'),  -- D6
+(2, 29, 'Trống'),  -- D7
+(2, 30, 'Trống'),  -- D8
+(2, 31, 'Trống'),  -- E1 (VIP)
+(2, 32, 'Trống'),  -- E2 (VIP)
+(2, 33, 'Trống'),  -- E3 (VIP)
+(2, 34, 'Trống'),  -- E4
+(2, 35, 'Trống'),  -- E5 (VIP)
+(2, 36, 'Trống'),  -- E6
+(2, 37, 'Trống'),  -- E7
+(2, 38, 'Trống'),  -- E8
+(2, 39, 'Trống'),  -- F1
+(2, 40, 'Trống'),  -- F2
+(2, 41, 'Trống'),  -- F3
+(2, 42, 'Trống'),  -- F4
+(2, 43, 'Trống'),  -- F5 (VIP)
+(2, 44, 'Trống'); -- F6 (VIP)
+
+-- Thêm dữ liệu cho lịch chiếu 3 (phòng 1, khung giờ khác)
+INSERT INTO lich_chieu_ghe (lich_chieu_id, ghe_id, trang_thai) VALUES
+-- Một vài ghế đã đặt khác với lịch chiếu 1
+(3, 1, 'Trống'),   -- A1
+(3, 2, 'Đã đặt'),  -- A2
+(3, 3, 'Trống'),   -- A3
+(3, 4, 'Trống'),   -- A4
+(3, 5, 'Đã đặt'),  -- A5
+(3, 6, 'Trống'),   -- A6
+(3, 7, 'Trống'),   -- B1
+(3, 8, 'Trống'),   -- B2
+(3, 9, 'Trống'),   -- B3 (VIP)
+(3, 10, 'Trống'),  -- B4 (VIP)
+(3, 11, 'Trống'),  -- B5
+(3, 12, 'Trống'),  -- B6
+(3, 13, 'Trống'),  -- B7
+(3, 14, 'Trống'),  -- B8
+(3, 15, 'Trống'),  -- C1
+(3, 16, 'Đã đặt'), -- C2
+(3, 17, 'Trống'),  -- C3
+(3, 18, 'Trống'),  -- C4
+(3, 19, 'Trống'),  -- C5
+(3, 20, 'Trống'),  -- C6 (VIP)
+(3, 21, 'Trống'),  -- C7 (VIP)
+(3, 22, 'Đã đặt'), -- C8 (VIP)
+(3, 23, 'Trống'),  -- D1
+(3, 24, 'Trống'),  -- D2 (VIP)
+(3, 25, 'Trống'),  -- D3
+(3, 26, 'Trống'),  -- D4
+(3, 27, 'Trống'),  -- D5
+(3, 28, 'Trống'),  -- D6
+(3, 29, 'Trống'),  -- D7
+(3, 30, 'Trống'),  -- D8
+(3, 31, 'Trống'),  -- E1 (VIP)
+(3, 32, 'Trống'),  -- E2 (VIP)
+(3, 33, 'Trống'),  -- E3 (VIP)
+(3, 34, 'Trống'),  -- E4
+(3, 35, 'Đã đặt'), -- E5 (VIP)
+(3, 36, 'Trống'),  -- E6
+(3, 37, 'Trống'),  -- E7
+(3, 38, 'Trống'),  -- E8
+(3, 39, 'Trống'),  -- F1
+(3, 40, 'Trống'),  -- F2
+(3, 41, 'Trống'),  -- F3
+(3, 42, 'Trống'),  -- F4
+(3, 43, 'Trống'),  -- F5 (VIP)
+(3, 44, 'Trống'); -- F6 (VIP)
+
+-- Thêm dữ liệu cho lịch chiếu 4 (phòng 2, một vài phim khác)
+INSERT INTO lich_chieu_ghe (lich_chieu_id, ghe_id, trang_thai) VALUES
+-- Lưu ý: Phòng 2 có thể có layout ghế khác, cần kiểm tra dữ liệu thực tế
+-- Đây chỉ là ví dụ với giả sử phòng 2 có cùng layout với phòng 1
+(4, 1, 'Trống'),   -- A1
+(4, 2, 'Trống'),   -- A2
+(4, 3, 'Trống'),   -- A3
+(4, 4, 'Trống'),   -- A4
+(4, 5, 'Trống'),   -- A5
+(4, 6, 'Trống'),   -- A6
+(4, 7, 'Trống'),   -- B1
+(4, 8, 'Trống'),   -- B2
+(4, 9, 'Đã đặt'),  -- B3 (VIP)
+(4, 10, 'Đã đặt'), -- B4 (VIP)
+(4, 11, 'Trống'),  -- B5
+(4, 12, 'Trống'),  -- B6
+(4, 13, 'Trống'),  -- B7
+(4, 14, 'Trống'),  -- B8
+(4, 15, 'Trống'),  -- C1
+(4, 16, 'Trống'),  -- C2
+(4, 17, 'Trống'),  -- C3
+(4, 18, 'Trống'),  -- C4
+(4, 19, 'Trống'),  -- C5
+(4, 20, 'Trống'),  -- C6 (VIP)
+(4, 21, 'Trống'),  -- C7 (VIP)
+(4, 22, 'Trống'),  -- C8 (VIP)
+(4, 23, 'Trống'),  -- D1
+(4, 24, 'Trống'),  -- D2 (VIP)
+(4, 25, 'Trống'),  -- D3
+(4, 26, 'Trống'),  -- D4
+(4, 27, 'Trống'),  -- D5
+(4, 28, 'Trống'),  -- D6
+(4, 29, 'Trống'),  -- D7
+(4, 30, 'Trống'),  -- D8
+(4, 31, 'Trống'),  -- E1 (VIP)
+(4, 32, 'Trống'),  -- E2 (VIP)
+(4, 33, 'Trống'),  -- E3 (VIP)
+(4, 34, 'Trống'),  -- E4
+(4, 35, 'Trống'),  -- E5 (VIP)
+(4, 36, 'Trống'),  -- E6
+(4, 37, 'Trống'),  -- E7
+(4, 38, 'Trống'),  -- E8
+(4, 39, 'Trống'),  -- F1
+(4, 40, 'Trống'),  -- F2
+(4, 41, 'Trống'),  -- F3
+(4, 42, 'Trống'),  -- F4
+(4, 43, 'Trống'),  -- F5 (VIP)
+(4, 44, 'Trống'); -- F6 (VIP
 
 -- Thêm dữ liệu mẫu cho bảng giao_dich
 INSERT INTO giao_dich (id, ghi_chu, giam_gia, ma_giao_dich, ma_qr, phuong_thuc, thanh_tien, thoi_gian, tong_tien, trang_thai, khach_hang_id) VALUES

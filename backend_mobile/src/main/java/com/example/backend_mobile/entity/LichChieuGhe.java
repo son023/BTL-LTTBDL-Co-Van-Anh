@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "lich_chieu_ghe")
 @Data
@@ -25,4 +27,10 @@ public class LichChieuGhe {
 
     @Column(name = "trang_thai", length = 20, nullable = false)
     private String trangThai = "Trống";
+
+    @Column(name = "thoi_gian_giu")
+    private LocalDateTime thoiGianGiu;
+
+    @Column(name = "thoi_gian_het_han")
+    private LocalDateTime thoiGianHetHan;
 }

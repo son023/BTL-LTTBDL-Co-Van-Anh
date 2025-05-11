@@ -23,37 +23,22 @@ public class GheTimeoutService {
     private final VeRepository veRepository;
     private final LichChieuGheRepository lichChieuGheRepository;
 
-    @Scheduled(fixedRate = 60000) // 60000ms = 1 phút
+    @Scheduled(fixedRate = 60000)
     @Transactional
-    public void kiemTraGheHetHan() {
-        log.info("Bắt đầu kiểm tra ghế hết hạn...");
+    public void huyGheHetHan() {
+        LocalDateTime now = LocalDateTime.now();
 
-        LocalDateTime thoiGianHetHan = LocalDateTime.now().minusMinutes(5);
+        List<LichChieuGhe> danhSachGheHetHan = lichChieuGheRepository.findAllByTrangThaiAndThoiGianHetHanBefore("Đã chọn", now);
 
-        List<Ve> danhSachVeHetHan = veRepository.findVeChoThanhToanHetHan(thoiGianHetHan);
+        for (LichChieuGhe lichChieuGhe : danhSachGheHetHan) {
+            lichChieuGhe.setTrangThai("Trống");
+            lichChieuGhe.setThoiGianGiu(null);
+            lichChieuGhe.setThoiGianHetHan(null);
+            lichChieuGheRepository.save(lichChieuGhe);
+        }
 
-        if (!danhSachVeHetHan.isEmpty()) {
-            log.info("Đã tìm thấy {} vé hết hạn cần giải phóng", danhSachVeHetHan.size());
-
-            for (Ve ve : danhSachVeHetHan) {
-                LichChieuGhe lichChieuGhe = ve.getLichChieuGhe();
-
-                if (lichChieuGhe != null) {
-                    lichChieuGhe.setTrangThai("Trống");
-                    lichChieuGheRepository.save(lichChieuGhe);
-                    ve.setTrangThai("Đã hủy");
-                    ve.setGhiChu("Vé hết hạn do không thanh toán trong thời gian quy định");
-                    veRepository.save(ve);
-
-                    log.debug("Đã giải phóng ghế {} cho lịch chiếu {}",
-                            lichChieuGhe.getGhe().getTen(),
-                            lichChieuGhe.getLichChieu().getId());
-                }
-            }
-
-            log.info("Hoàn thành việc giải phóng {} ghế đã hết hạn", danhSachVeHetHan.size());
-        } else {
-            log.debug("Không có ghế nào cần giải phóng");
+        if (!danhSachGheHetHan.isEmpty()) {
+            log.info("Đã hủy {} ghế hết hạn giữ", danhSachGheHetHan.size());
         }
     }
 }

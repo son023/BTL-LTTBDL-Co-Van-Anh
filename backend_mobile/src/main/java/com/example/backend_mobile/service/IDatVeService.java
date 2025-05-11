@@ -1,17 +1,17 @@
 package com.example.backend_mobile.service;
 
-import com.example.backend_mobile.dtos.request.DatVeRequest;
-import com.example.backend_mobile.dtos.response.DatVeResponse;
+import com.example.backend_mobile.dtos.request.ThanhToanRequest;
+import com.example.backend_mobile.dtos.response.ThanhToanResponse;
+
+import java.util.List;
 
 public interface IDatVeService {
 
-    DatVeResponse chonGhe(DatVeRequest request, Integer khachHangId);
+    String chonGhe(List<Integer> lichChieuGheId, Integer khachHangId);
 
     void huyGhe(Integer lichChieuGheId, Integer khachHangId);
 
-    String taoGiaoDich(Integer lichChieuId, Integer khachHangId);
-
-//    void xacNhanThanhToan(String maGiaoDich, Integer khachHangId);
+    ThanhToanResponse thanhToan(ThanhToanRequest datVeRequest, Integer khachHangId);
 
     boolean enablePaymentMethod(int methodId);
 }
