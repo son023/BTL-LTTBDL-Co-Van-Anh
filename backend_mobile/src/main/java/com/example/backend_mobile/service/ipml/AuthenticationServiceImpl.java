@@ -1,5 +1,6 @@
 package com.example.backend_mobile.service.ipml;
 
+import com.example.backend_mobile.dtos.request.GoogleLoginRequest;
 import com.example.backend_mobile.security.jwt.JwtUtils;
 import com.example.backend_mobile.security.service.UserDetailsImpl;
 import com.example.backend_mobile.security.service.UserDetailsServiceImpl;
@@ -19,8 +20,10 @@ import com.nimbusds.jose.JOSEException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -52,22 +56,31 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Override
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = generateToken(authentication, false);
-        String refreshToken = generateToken(authentication, true);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = generateToken(authentication, false);
+            String refreshToken = generateToken(authentication, true);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                refreshToken,
-                "Bearer",
-                userDetails.getId(),
-                userDetails.getEmail(),
-                userDetails.getTen(),
-                userDetails.getAuthorities().stream().findFirst().get().getAuthority()));
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    refreshToken,
+                    "Bearer",
+                    userDetails.getId(),
+                    userDetails.getEmail(),
+                    userDetails.getTen(),
+                    userDetails.getAuthorities().stream().findFirst().get().getAuthority()));
+        }catch (BadCredentialsException e) {
+            // Trả về thông báo thân thiện hơn
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new MessageResponse("Sai thông tin tài khoản hoặc mật khẩu", false));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageResponse("Lỗi hệ thống: " + e.getMessage(), false));
+        }
     }
 
     @Override
@@ -195,4 +208,76 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     public String generateToken(Authentication authentication, boolean isRefreshToken) {
         return jwtUtils.generateToken(authentication, isRefreshToken);
     }
+
+    @Override
+    public ResponseEntity<?> authenticateWithGoogle(GoogleLoginRequest loginRequest) {
+        try {
+            // Kiểm tra xem người dùng đã tồn tại chưa
+            Optional<NguoiDung> existingUser = nguoiDungRepository.findByEmail(loginRequest.getEmail());
+
+            KhachHang user;
+
+            if (existingUser.isPresent()) {
+                // Nếu người dùng đã tồn tại, sử dụng tài khoản đó
+                if (existingUser.get() instanceof KhachHang) {
+                    user = (KhachHang) existingUser.get();
+                } else {
+                    return ResponseEntity
+                            .badRequest()
+                            .body(new MessageResponse("Email đã được sử dụng bởi tài khoản khác!", false));
+                }
+            } else {
+                // Tạo tài khoản mới nếu chưa tồn tại
+                user = new KhachHang();
+                user.setEmail(loginRequest.getEmail());
+                user.setTen(loginRequest.getName());
+                // Đặt mật khẩu ngẫu nhiên vì người dùng sẽ không cần nó để đăng nhập
+                user.setMatKhau(encoder.encode(UUID.randomUUID().toString()));
+
+                // Thiết lập các thông tin khác
+                user.setAvatar(loginRequest.getPhotoUrl());
+                user.setThoiGianTao(LocalDateTime.now());
+                user.setTrangThai(TrangThaiNguoiDung.HOAT_DONG);
+
+                // Thông tin riêng cho khách hàng
+                user.setMaThanhVien("KH" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+                user.setDiemTichLuy(0);
+                user.setHangThanhVien(HangThanhVien.THUONG);
+                user.setNgayDangKy(LocalDateTime.now());
+
+                // Lưu người dùng mới
+                user = khachHangRepository.save(user);
+            }
+
+            // THAY ĐỔI: Không sử dụng authenticationManager mà tạo token trực tiếp
+            // Tạo UserDetails thủ công
+            UserDetailsImpl userDetails = UserDetailsImpl.build(user);
+
+            // Tạo authentication object thủ công
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Tạo JWT tokens
+            String jwt = generateToken(authentication, false);
+            String refreshToken = generateToken(authentication, true);
+
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    refreshToken,
+                    "Bearer",
+                    user.getId(),
+                    user.getEmail(),
+                    user.getTen(),
+                    "ROLE_USER"));
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Thêm log chi tiết để debug
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Đăng nhập Google thất bại: " + e.getMessage(), false));
+        }
+    }
+
+
 }
