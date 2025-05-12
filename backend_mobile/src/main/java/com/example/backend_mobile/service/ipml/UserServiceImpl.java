@@ -3,6 +3,7 @@ package com.example.backend_mobile.service.ipml;
 import com.example.backend_mobile.dtos.request.UserProfileUpdateRequest;
 import com.example.backend_mobile.dtos.response.AvatarResponse;
 import com.example.backend_mobile.dtos.response.MessageResponse;
+import com.example.backend_mobile.dtos.response.UserProfileResponse;
 import com.example.backend_mobile.enums.GioiTinh;
 import com.example.backend_mobile.security.service.UserDetailsImpl;
 import com.example.backend_mobile.entity.KhachHang;
@@ -42,7 +43,15 @@ public class UserServiceImpl implements IUserService {
     @Override
     public ResponseEntity<?> getUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return getUserFromAuthentication(authentication);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        Optional<NguoiDung> userOpt = nguoiDungRepository.findById(userDetails.getId());
+        if (userOpt.isPresent()) {
+            NguoiDung user = userOpt.get();
+            UserProfileResponse response = convertToProfileResponse(user);
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @Override
@@ -155,6 +164,13 @@ public class UserServiceImpl implements IUserService {
             return ResponseEntity.badRequest().body(new MessageResponse("File rỗng", false));
         }
 
+        // Kiểm tra định dạng file
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Chỉ cho phép upload file ảnh", false));
+        }
+
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -183,7 +199,17 @@ public class UserServiceImpl implements IUserService {
             String fileName = "avatar_" + user.getId() + "_" + UUID.randomUUID().toString() +
                     (extension.isEmpty() ? "" : "." + extension);
 
-            // Lưu file
+            // Xóa avatar cũ nếu có
+            if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+                try {
+                    Path oldFilePath = Paths.get(user.getAvatar().substring(1)); // Bỏ dấu "/" đầu
+                    Files.deleteIfExists(oldFilePath);
+                } catch (Exception e) {
+                    // Bỏ qua lỗi khi xóa file cũ
+                }
+            }
+
+            // Lưu file mới
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
@@ -198,4 +224,26 @@ public class UserServiceImpl implements IUserService {
                     .body(new MessageResponse("Không thể lưu avatar: " + e.getMessage(), false));
         }
     }
+
+
+    private UserProfileResponse convertToProfileResponse(NguoiDung user) {
+        UserProfileResponse response = new UserProfileResponse();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setTen(user.getTen());
+        response.setSoDienThoai(user.getSoDienThoai());
+        response.setNgaySinh(user.getNgaySinh() != null ? user.getNgaySinh().toString() : null);
+        response.setGioiTinh(user.getGioiTinh() != null ? user.getGioiTinh().getValue() : null);
+        response.setDiaChi(user.getDiaChi());
+        response.setAvatar(user.getAvatar());
+
+        if (user instanceof KhachHang) {
+            KhachHang khachHang = (KhachHang) user;
+            response.setHangThanhVien(khachHang.getHangThanhVien().getValue());
+            response.setDiemTichLuy(khachHang.getDiemTichLuy());
+        }
+
+        return response;
+    }
+
 }
