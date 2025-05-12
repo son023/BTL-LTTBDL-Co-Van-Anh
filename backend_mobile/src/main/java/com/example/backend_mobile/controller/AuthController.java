@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.backend_mobile.dtos.request.GoogleLoginRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -37,4 +38,12 @@ public class AuthController {
     public ResponseEntity<?> logoutUser(@RequestHeader("Authorization") String token) {
         return authService.logoutUser(token);
     }
+
+
+    @PostMapping("/google")
+    public ResponseEntity<?> authenticateWithGoogle(@Valid @RequestBody GoogleLoginRequest loginRequest) {
+        return authService.authenticateWithGoogle(loginRequest);
+    }
+
+
 }
