@@ -13,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/dat-ve")
@@ -55,13 +57,11 @@ public class DatVeController {
     }
 
     @PostMapping("/enable/{methodId}")
-    public ResponseEntity<String> enablePaymentMethod(@PathVariable int methodId, @RequestParam("stk") String stk) {
-        boolean success = datVeService.enablePaymentMethod(methodId, stk);
-        if (success) {
-            return ResponseEntity.ok("Payment method enabled successfully.");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Payment method not found.");
-        }
+    public Map<String, Boolean> enablePaymentMethod(@PathVariable int methodId, @RequestParam("stk") String stk) {
+        boolean result = datVeService.enablePaymentMethod(methodId, stk);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("success", result);
+        return response;
     }
 
     @PostMapping("/thanh-toan")
