@@ -18,6 +18,7 @@ public class VeDTO {
     private LocalDateTime ngayTao;
     private String trangThai;
     private String ghiChu;
+    private String poster;
 
     // Dữ liệu từ các entity liên quan (flatten)
     private Integer lichChieuId;
