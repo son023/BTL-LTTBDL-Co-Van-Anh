@@ -15,8 +15,8 @@ INSERT INTO khach_hang (id, diem_tich_luy, hang_thanh_vien, ma_thanh_vien, ngay_
 -- Thêm dữ liệu mẫu cho bảng phong
 INSERT INTO phong (id, loai_phong, mo_ta, suc_chua, ten, trang_thai, vi_tri) VALUES
                                                                                  (1, '2D', 'Phòng chiếu phim 2D tiêu chuẩn với 48 ghế ngồi thoải mái', 48, 'Phòng 1', 'Hoạt động', 'Tầng 1'),
-                                                                                 (2, '3D', 'Phòng chiếu phim 3D với 48 ghế ngồi và hệ thống âm thanh Dolby', 48, 'Phòng 2', 'Hoạt động', 'Tầng 1'),
-                                                                                 (3, 'IMAX', 'Phòng chiếu IMAX với 48 ghế cao cấp và màn hình siêu lớn', 48, 'Phòng 3', 'Hoạt động', 'Tầng 2');
+                                                                                 (2, '3D', 'Phòng chiếu phim 3D với 48 ghế ngồi và hệ thống âm thanh Dolby', 48, 'Phòng 2', 'Hoạt động', 'Tầng 1');
+
 
 -- Thêm dữ liệu mẫu cho bảng ghe theo sơ đồ trong hình
 -- Phòng 1 - Tạo ghế dựa theo sơ đồ A1-F8
@@ -117,11 +117,11 @@ INSERT INTO phim (id, danh_gia, dao_dien, dien_vien, do_dai, do_tuoi, hang_sx, m
 
 -- Thêm dữ liệu mẫu cho bảng lich_chieu
 INSERT INTO lich_chieu (id, bat_dau, gia_ve, ket_thuc, ngay_lap, trang_thai, phim_id, phong_id) VALUES
-                                                                                                    (1, '2025-05-05 10:00:00', 80000.00, '2025-05-05 12:00:00', '2025-05-01 08:00:00', 'Đang mở', 1, 1),
-                                                                                                    (2, '2025-05-05 13:00:00', 80000.00, '2025-05-05 15:00:00', '2025-05-01 08:00:00', 'Đang mở', 1, 1),
-                                                                                                    (3, '2025-05-05 10:30:00', 90000.00, '2025-05-05 12:15:00', '2025-05-01 08:00:00', 'Đang mở', 2, 2),
-                                                                                                    (4, '2025-05-05 13:30:00', 90000.00, '2025-05-05 15:15:00', '2025-05-01 08:00:00', 'Đang mở', 2, 2),
-                                                                                                    (5, '2025-05-05 16:00:00', 100000.00, '2025-05-05 18:30:00', '2025-05-01 08:00:00', 'Đang mở', 4, 3);
+                                                                                                    (1, '2025-05-15 10:00:00', 80000.00, '2025-05-15 12:00:00', '2025-05-01 08:00:00', 'Đang mở', 1, 1),
+                                                                                                    (2, '2025-05-15 13:00:00', 80000.00, '2025-05-15 15:00:00', '2025-05-01 08:00:00', 'Đang mở', 1, 1),
+                                                                                                    (3, '2025-05-15 10:30:00', 90000.00, '2025-05-15 12:15:00', '2025-05-01 08:00:00', 'Đang mở', 2, 2),
+                                                                                                    (4, '2025-05-15 13:30:00', 90000.00, '2025-05-15 15:15:00', '2025-05-01 08:00:00', 'Đang mở', 2, 2);
+
 
 -- Thêm dữ liệu mẫu cho bảng lich_chieu_ghe
 
