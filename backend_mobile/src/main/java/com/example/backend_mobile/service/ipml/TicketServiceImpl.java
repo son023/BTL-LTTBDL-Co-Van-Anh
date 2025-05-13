@@ -52,6 +52,9 @@ public class TicketServiceImpl implements ITicketService {
             dto.setTrangThai(ve.getTrangThai());
             dto.setGhiChu(ve.getGhiChu());
 
+            String poster = ve.getLichChieuGhe().getLichChieu().getPhim().getPoster();
+            dto.setPoster(poster);
+
             if (ve.getLichChieuGhe().getLichChieu() != null) {
                 dto.setLichChieuId(ve.getLichChieuGhe().getLichChieu().getId());
                 if (ve.getLichChieuGhe().getLichChieu().getPhim() != null)
