@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +32,18 @@ public class PaymentController {
             return ResponseEntity.ok(handlePaymentService.getAllEnalblePaymentMethods(khachHangId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
+    }
+
+    @PostMapping("update")
+    public ResponseEntity<Boolean> updatePaymentMethod(@RequestBody PaymentMethodDTO paymentMethodDTO,
+                                                       @RequestHeader("Authorization") String token) {
+        try {
+            String jwtToken = token.replace("Bearer ", "");
+            Integer khachHangId = jwtUtils.getKhachHangIdFromToken(jwtToken);
+            return ResponseEntity.ok(handlePaymentService.updatePaymentMethod(khachHangId, paymentMethodDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(false);
         }
     }
 }
