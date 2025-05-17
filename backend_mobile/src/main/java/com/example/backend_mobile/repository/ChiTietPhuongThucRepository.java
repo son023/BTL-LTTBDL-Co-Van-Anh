@@ -13,5 +13,5 @@ public interface ChiTietPhuongThucRepository extends JpaRepository<ChiTietPhuong
 
     @Query(value = "SELECT * FROM chi_tiet_phuong_thuc WHERE id_khach_hang = :idKhachHang", nativeQuery = true)
     List<ChiTietPhuongThuc> findByKhachHangId(@Param("idKhachHang") Integer idKhachHang);
-    ChiTietPhuongThuc findByThanhToanId(Integer thanhToanId);
+    List<ChiTietPhuongThuc> findByThanhToanId(Integer thanhToanId);
 }

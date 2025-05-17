@@ -81,9 +81,13 @@ public class DatVeServiceImpl implements IDatVeService {
         int currentUserId = userDetails.getId();
 
         try {
-            ChiTietPhuongThuc existMethod = chiTietPhuongThucRepository.findByThanhToanId(methodId);
-            if(existMethod != null && existMethod.getKhachHang().getId() == currentUserId) {
-                chiTietPhuongThucRepository.delete(existMethod);
+            List<ChiTietPhuongThuc> existMethod = chiTietPhuongThucRepository.findByThanhToanId(methodId);
+
+            for(ChiTietPhuongThuc method: existMethod) {
+                if( method.getKhachHang().getId() == currentUserId) {
+                    chiTietPhuongThucRepository.delete(method);
+                    break;
+                }
             }
 
             ChiTietPhuongThuc newEnableMethod = new ChiTietPhuongThuc();
