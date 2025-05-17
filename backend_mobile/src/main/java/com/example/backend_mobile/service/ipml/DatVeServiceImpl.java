@@ -81,6 +81,11 @@ public class DatVeServiceImpl implements IDatVeService {
         int currentUserId = userDetails.getId();
 
         try {
+            ChiTietPhuongThuc existMethod = chiTietPhuongThucRepository.findByThanhToanId(methodId);
+            if(existMethod != null && existMethod.getKhachHang().getId() == currentUserId) {
+                chiTietPhuongThucRepository.delete(existMethod);
+            }
+
             ChiTietPhuongThuc newEnableMethod = new ChiTietPhuongThuc();
             Optional<ThanhToan> thanhToan = thanhToanRepository.findById(methodId);
             Optional<KhachHang> khachHang = khachHangRepository.findById(currentUserId);

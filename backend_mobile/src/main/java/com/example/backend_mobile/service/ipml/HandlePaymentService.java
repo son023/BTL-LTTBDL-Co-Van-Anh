@@ -38,10 +38,26 @@ public class HandlePaymentService implements IHandlePaymentService {
                 paymentMethodDTO.setId(method.getThanhToan().getId());
                 paymentMethodDTO.setTen(method.getThanhToan().getTen());
                 paymentMethodDTO.setSoTaiKhoan(method.getStk());
+                paymentMethodDTO.setStatus(method.getStatus());
                 paymentMethodDTOS.add(paymentMethodDTO);
             }
         }
 
         return paymentMethodDTOS;
+    }
+
+    @Override
+    public boolean updatePaymentMethod(int khachHangId, PaymentMethodDTO paymentMethodDTO) {
+
+        List<ChiTietPhuongThuc> listMethod = chiTietPhuongThucRepository.findByKhachHangId(khachHangId);
+        for (ChiTietPhuongThuc method : listMethod) {
+            if(method.getThanhToan().getTen().equals(paymentMethodDTO.getTen())) {
+                method.setStk(paymentMethodDTO.getSoTaiKhoan());
+                method.setStatus(paymentMethodDTO.getStatus());
+                chiTietPhuongThucRepository.save(method);
+                return true;
+            }
+        }
+        return false;
     }
 }

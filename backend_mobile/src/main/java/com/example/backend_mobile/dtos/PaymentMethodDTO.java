@@ -14,4 +14,5 @@ public class PaymentMethodDTO {
     private Integer id;
     private String ten;
     private String soTaiKhoan;
+    private String status;
 }
