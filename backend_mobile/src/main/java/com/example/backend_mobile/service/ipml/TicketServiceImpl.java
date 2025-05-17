@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,7 @@ public class TicketServiceImpl implements ITicketService {
         List<Ve> listVe = veRepository.findAll()
                 .stream()
                 .filter(ve -> ve.getKhachHang().getId().equals(currentUserId))
+                .sorted(Comparator.comparing(Ve::getNgayTao).reversed())
                 .collect(Collectors.toList());
 
         List<VeDTO> listVeDTO = new ArrayList<>();
